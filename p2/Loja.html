@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EyeGlass</title>
-    <script src="https://kit.fontawesome.com/2eee17236f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./Loja.css">
+
 </head>
 <body>
     <header>
@@ -20,31 +20,45 @@
     <div id="galeria-loja">
         <div id="caxinha-1">
             <img src="./assets/oculos01.webp" alt="">
-            <p id="produto1">Óculos de Proteção Vision 500 Volk Incolor Antiembaçante e Antirrisco</p>
-            <p id="preco1">R$ 99,90</p>
-            <button id="comprar">Comprar</button>
+                <p id="produto1">Óculos de Proteção Vision 500 Volk Incolor Antiembaçante e Antirrisco</p>
+                <p id="preco1">R$ 99,90</p>
+                <div class="controles">
+                    <button onclick="mudarQuantidade(1, -1)">-</button>
+                    <span id="qtd-1">0</span>
+                    <button onclick="mudarQuantidade(1, 1)">+</button>
+                </div>
         </div>
         <div id="caxinha-2">
             <img src="./assets/oculos02.webp" alt="">
-            <p id="produto2">Óculos de grau Quadrado Acetato Preto</p>
-            <p id="preco2">R$ 169,90</p>
-            <button id="comprar">Comprar</button>
+                <p id="produto2">Óculos de grau Quadrado Acetato Preto</p>
+                <p id="preco2">R$ 169,90</p>
+            <div class="controles">
+                    <button onclick="mudarQuantidade(2, -1)">-</button>
+                    <span id="qtd-2">0</span>
+                    <button onclick="mudarQuantidade(2, 1)">+</button>
+            </div>
         </div>
         <div id="caxinha-3">
             <img src="./assets/oculos03.jpg" alt="">
-            <p id="produto3">Óculos inteligente ray ban meta wayfarer smart glasses com camera</p>
-            <p id="preco3">R$ 3.500,99</p>
-            <button id="comprar">Comprar</button>
+                <p id="produto3">Óculos inteligente ray ban meta wayfarer smart glasses com camera</p>
+                <p id="preco3">R$ 3.500,99</p>
+            <div class="controles">
+                    <button onclick="mudarQuantidade(3, -1)">-</button>
+                    <span id="qtd-3">0</span>
+                    <button onclick="mudarQuantidade(3, 1)">+</button>
+            </div>
         </div>
     </div>
-    <div id="carrinho">
-        <button>COMPRAR</button>
+        <div id="carrinho">
+        <button id="comprar">Comprar</button>
+        <button id="limpar">Limpar</button>
+        <p id="texto-comprar"></p>
         <hr>
         <p>Carrinho: </p>
-        <div id="item">
-            
-        </div>
+        <div id="item"></div>
+        <p id="total"></p>
     </div>
     <footer> <p>© 2026 OsMaiorais. Todos os direitos  reservados.</p></footer>
+    <script src="./Loja.js"></script>
 </body>
 </html>
