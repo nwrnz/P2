@@ -28,7 +28,7 @@ function converterPreco(precoTexto){
     );
 }
 
-function formatarMoeda(valor){
+function formatarMoeda(valor){ /* isso é pra formtal a moeda em real, não ta em dolar, pq nois ta no Brasil, e faz o L dnv */
     return valor.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL"
