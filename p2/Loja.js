@@ -146,6 +146,11 @@ btnComprar.addEventListener("click", function(){
         textoAlerta.style.color = "red";
     }
 
+ produtosCarrinho = [];
+
+    atualizarTodasQuantidades();
+    renderizarCarrinho();
+    
     setTimeout(() => {
         textoAlerta.textContent = "";
     }, 1000);
