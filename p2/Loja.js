@@ -1,20 +1,67 @@
 const produtoLoja = [
-    {id: 1, nome: document.getElementById("produto1").textContent, preco: document.getElementById("preco1").textContent},
-    {id: 2, nome: document.getElementById("produto2").textContent, preco: document.getElementById("preco2").textContent},
-    {id: 3, nome: document.getElementById("produto3").textContent, preco: document.getElementById("preco3").textContent}
+    {
+        id: 1,
+        nome: document.getElementById("produto1").textContent,
+        preco: document.getElementById("preco1").textContent
+    },
+    {
+        id: 2,
+        nome: document.getElementById("produto2").textContent,
+        preco: document.getElementById("preco2").textContent
+    },
+    {
+        id: 3,
+        nome: document.getElementById("produto3").textContent,
+        preco: document.getElementById("preco3").textContent
+    }
 ];
+
 let produtosCarrinho = [];
 
-function mudarQuantidade(id, valor){
-    const existente = produtosCarrinho.find(prod => prod.id == id);
+function converterPreco(precoTexto){
+    return Number(
+        precoTexto
+            .replace("R$", "")
+            .replace(/\./g, "")
+            .replace(",", ".")
+            .trim()
+    );
+}
 
-    if(existente){
-        existente.quantidade += valor;
-        if(existente.quantidade <= 0){
-            produtosCarrinho = produtosCarrinho.filter(prod => prod.id != id);
+function formatarMoeda(valor){
+    return valor.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    });
+}
+
+function atualizarQuantidadeProduto(id){
+    const qtdProduto = document.getElementById(`qtd-${id}`);
+    const produtoNoCarrinho = produtosCarrinho.find(produto => produto.id == id);
+
+    if(qtdProduto){
+        qtdProduto.textContent = produtoNoCarrinho ? produtoNoCarrinho.quantidade : 0;
+    }
+}
+
+function atualizarTodasQuantidades(){
+    produtoLoja.forEach(produto => {
+        atualizarQuantidadeProduto(produto.id);
+    });
+}
+
+function mudarQuantidade(id, valor){
+    let produtoNoCarrinho = produtosCarrinho.find(produto => produto.id == id);
+
+    if(produtoNoCarrinho){
+        produtoNoCarrinho.quantidade += valor;
+
+        if(produtoNoCarrinho.quantidade <= 0){
+            produtosCarrinho = produtosCarrinho.filter(produto => produto.id != id);
         }
     } else if(valor > 0){
-        const produto = produtoLoja.find(prod => prod.id == id);
+        const produto = produtoLoja.find(produto => produto.id == id);
+
         produtosCarrinho.push({
             id: produto.id,
             nome: produto.nome,
@@ -23,10 +70,7 @@ function mudarQuantidade(id, valor){
         });
     }
 
-    const qtdSpan = document.getElementById(`qtd-${id}`);
-    const novoItem = produtosCarrinho.find(prod => prod.id == id);
-    qtdSpan.textContent = novoItem ? novoItem.quantidade : 0;
-
+    atualizarTodasQuantidades();
     renderizarCarrinho();
 }
 
@@ -38,54 +82,73 @@ function renderizarCarrinho(){
 
     let soma = 0;
 
+    if(produtosCarrinho.length === 0){
+        itemDiv.innerHTML = `<p class="carrinho-vazio">Seu carrinho está vazio.</p>`;
+        total.textContent = "Total: R$ 0,00";
+        atualizarTodasQuantidades();
+        return;
+    }
+
     produtosCarrinho.forEach(produto => {
-        soma = soma + (parseFloat(produto.preco.replace("R$", "").replace(",", ".").trim()) * produto.quantidade);
+        const precoNumero = converterPreco(produto.preco);
+        const subtotal = precoNumero * produto.quantidade;
+
+        soma += subtotal;
+
         const li = document.createElement("li");
         li.className = "cart-item";
 
         li.innerHTML = `
-            <span>${produto.nome} (x${produto.quantidade}) - ${produto.preco}</span>
-            <div>
+            <span>
+                ${produto.nome} (x${produto.quantidade}) - ${produto.preco}
+            </span>
+
+            <div class="cart-actions">
                 <button onclick="mudarQuantidade(${produto.id}, -1)">-</button>
                 <button onclick="mudarQuantidade(${produto.id}, 1)">+</button>
-                <button onclick="removerProduto(${produto.id})">Remover</button>
+                <button class="btn-remover" onclick="removerProduto(${produto.id})">Remover</button>
             </div>
         `;
 
         itemDiv.appendChild(li);
     });
 
-    total.textContent = "Total: R$" + soma.toFixed(2);
+    total.textContent = "Total: " + formatarMoeda(soma);
+    atualizarTodasQuantidades();
 }
 
 function removerProduto(id){
     produtosCarrinho = produtosCarrinho.filter(produto => produto.id != id);
+
+    atualizarTodasQuantidades();
     renderizarCarrinho();
 }
 
 const btnLimpar = document.getElementById("limpar");
+
 btnLimpar.addEventListener("click", function(){
-    if(produtosCarrinho.length > 0){
-        produtosCarrinho = [];
-        renderizarCarrinho();
-    }
+    produtosCarrinho = [];
+
+    atualizarTodasQuantidades();
+    renderizarCarrinho();
 });
 
 const btnComprar = document.getElementById("comprar");
+
 btnComprar.addEventListener("click", function(){
     const textoAlerta = document.getElementById("texto-comprar");
+
     if(produtosCarrinho.length > 0){
-        renderizarCarrinho();
         textoAlerta.textContent = "Sucesso na compra!";
         textoAlerta.style.color = "green";
-        setTimeout(() => {
-            textoAlerta.textContent = "";
-        }, 1000);
     } else {
         textoAlerta.textContent = "Sem itens para comprar!";
         textoAlerta.style.color = "red";
-        setTimeout(() => {
-            textoAlerta.textContent = "";
-        }, 1000);
     }
+
+    setTimeout(() => {
+        textoAlerta.textContent = "";
+    }, 1000);
 });
+
+renderizarCarrinho();
