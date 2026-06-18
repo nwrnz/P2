@@ -19,7 +19,7 @@ const produtoLoja = [
 let produtosCarrinho = [];
 
 function converterPreco(precoTexto){
-    return Number(
+    return Number( /* pessoal do grupo, isso é pra retornar as casa decimais certas do numero. (to de atestado, faz o L) */
         precoTexto
             .replace("R$", "")
             .replace(/\./g, "")
